@@ -16,32 +16,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// #docregion RandomWordsState, RWS-class-only
 class RandomWordsState extends State<RandomWords> {
-  final List<WordPair> _suggestions = <WordPair>[];
-  final Set<WordPair> _saved = Set<WordPair>();
-  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
+  final _suggestions = <WordPair>[];
+  final Set<WordPair> _saved = <WordPair>{};
+  final _biggerFont = const TextStyle(fontSize: 18.0);
 
+  // #enddocregion RWS-var
+
+  // #docregion _buildSuggestions
   Widget _buildSuggestions() {
     return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemBuilder: (BuildContext _context, int i) {
-          if (i.isOdd) {
-            return Divider(
-              thickness: 1.0,
-            );
-          }
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: /*1*/ (context, i) {
+          if (i.isOdd) return Divider();
+          /*2*/
 
-          final int index = i ~/ 2;
+          final index = i ~/ 2; /*3*/
           if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10));
+            _suggestions.addAll(generateWordPairs().take(10)); /*4*/
           }
           return _buildRow(_suggestions[index]);
         });
   }
 
+  // #enddocregion _buildSuggestions
+
+  // #docregion _buildRow
   Widget _buildRow(WordPair pair) {
-    final bool alreadySaved = _saved.contains(pair);
+    final alreadySaved = _saved.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
@@ -63,12 +65,30 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
+  // #enddocregion _buildRow
+
+  // #docregion RWS-build
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Startup Name Generator'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+        ],
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+
+  // #enddocregion RWS-build
+
   void _pushSaved() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         // Add 20 lines from here...
         builder: (BuildContext context) {
-          final Iterable<ListTile> tiles = _saved.map(
+          final tiles = _saved.map(
             (WordPair pair) {
               return ListTile(
                 title: Text(
@@ -78,7 +98,7 @@ class RandomWordsState extends State<RandomWords> {
               );
             },
           );
-          final List<Widget> divided = ListTile.divideTiles(
+          final divided = ListTile.divideTiles(
             context: context,
             tiles: tiles,
           ).toList();
@@ -93,24 +113,11 @@ class RandomWordsState extends State<RandomWords> {
       ),
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Startup Name Generator'),
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
-          ],
-        ),
-        body: _buildSuggestions());
-  }
-// #docregion RWS-class-only
+// #docregion RWS-var
 }
-// #enddocregion RandomWordsState, RWS-class-only
+// #enddocregion RWS-var
 
-// #docregion RandomWords
 class RandomWords extends StatefulWidget {
   @override
-  RandomWordsState createState() => new RandomWordsState();
+  RandomWordsState createState() => RandomWordsState();
 }
