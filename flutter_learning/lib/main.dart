@@ -1,21 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import './product_manager.dart';
+
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    //TODO: implement createState
-    return _MyAppState();
-  }
-}
-
-class _MyAppState extends State<MyApp> {
-  List<String> _products = ['Food Tester'];
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,33 +15,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('EasyList'),
         ),
-        body: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    _products.add('Advanced Foot Tester');
-                  });
-                },
-                child: Text('Add Product'),
-              ),
-            ),
-            Column(
-              children: _products
-                  .map((e) => Card(
-                        child: Column(
-                          children: <Widget>[
-                            Image.asset('assets/indianFood.jpg'),
-                            Text(e)
-                          ],
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ],
-        ),
+        body: ProductManager(),
       ),
     );
   }
